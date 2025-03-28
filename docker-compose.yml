@@ -4,17 +4,35 @@ services:
       context: ./symfony-backend
       dockerfile: ./docker/php/Dockerfile
     container_name: symfony_backend
-    restart: always
-    working_dir: /var/www/app  # Adjusted working directory
+    restart: unless-stopped
+    working_dir: /var/www/app
     volumes:
-      - ./symfony-backend/app:/var/www/app  # FIXED: Mount the correct directory
+      - ./symfony-backend/app:/var/www/app
     depends_on:
       db:
         condition: service_healthy
     ports:
       - "8000:8000"
-    command: 
-      bash -c "composer install && php bin/console doctrine:schema:update --force && symfony server:start --no-tls --port=8000 --allow-all-ip"
+    command: >
+      bash -c "
+        until pg_isready -h db -U symfony -d symfony_db; do
+          sleep 2;
+        done;
+        
+        if [ ! -f /var/www/app/vendor/autoload.php ]; then
+          composer install;
+        fi
+        
+        php bin/console doctrine:database:create --if-not-exists;
+        php bin/console doctrine:schema:update --force;
+
+        if symfony server:status > /dev/null 2>&1; then
+          symfony server:stop;
+        fi
+
+        symfony server:start --no-tls --port=8000 --allow-all-ip;
+      "
+
 
   db:
     image: postgres:13
