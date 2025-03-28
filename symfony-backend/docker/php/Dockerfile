@@ -10,6 +10,7 @@ RUN apt update && apt install -y \
     unzip \
     curl \
     git \
+    postgresql-client \
     libpq-dev \
     && git config --global user.email "you@example.com" && git config --global user.name "Your Name" \
     && docker-php-ext-configure intl \
