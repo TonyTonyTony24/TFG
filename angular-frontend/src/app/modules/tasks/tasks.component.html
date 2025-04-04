@@ -11,6 +11,7 @@
       class="bg-sky-900 text-sky-700 text-xs p-1 border border-black ml-20">
       Add?
     </button>
+  </form>
 
     <ul *ngIf="tasks.length > 0; else noTasks" class="mt-5">
       <li *ngFor="let task of tasks" 
@@ -28,4 +29,31 @@
     <ng-template #noTasks>
       <p class="text--700 text-sm ml-10">Nothing here...</p>
     </ng-template>
+</div>
+
+<div class="w-full max-w-4xl mx-auto p-6">
+  <div class="container bg-white border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700 p-10">
+    <div class="search">
+      <!-- Campo de búsqueda -->
+      <input
+        type="text"
+        placeholder="Search..."
+        [formControl]="searchControl"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5 mr-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+
+      <!-- Mensaje cuando no hay resultados -->
+      <p *ngIf="filteredTasks.length === 0 && searchControl.value.trim() !== ''">
+        No hay resultados
+      </p>
+
+      <!-- Lista de tareas filtradas -->
+      <li
+        *ngFor="let task of filteredTasks"
+        class="flex items-center justify-between p-3 text-base font-bold text-black-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
+      >
+        <span>{{ task.title }}</span>
+      </li>
+    </div>
+  </div>
 </div>
