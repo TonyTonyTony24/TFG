@@ -3,44 +3,56 @@
 </button>
 
 <div class="container bg-sky-700 p-10 border-l-8 border-r-8 border-dotted border-black">
-    <h2 class="bg-white text-xs text-gray-500 font-thin ml-10">Task List</h2>
+  <h2 class="bg-white text-xs text-gray-500 font-thin ml-10">Task List</h2>
 
-    <input #taskInput type="text" placeholder="Write here..." 
-      class="w-1/3 p-1 border border-dashed border-b-gray-950 text-sky-900" />
-    <button (click)="addTask(taskInput.value); taskInput.value = ''" 
-      class="bg-sky-900 text-sky-700 text-xs p-1 border border-black ml-20">
-      Add?
-    </button>
+  <form [formGroup]="taskForm" (ngSubmit)="addTask()">
+    <div class="flex">
+      <input formControlName="title" #taskInput type="text" placeholder="Title..."
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5 mr-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      <p *ngIf="
+            taskForm.get('title')?.hasError('required') &&
+            taskForm.get('title')?.touched
+          " class="text-red-500 text-sm">
+        El título es obligatorio.
+      </p>
+      <p *ngIf="
+            taskForm.get('title')?.hasError('minlength') &&
+            taskForm.get('title')?.touched
+          " class="text-red-500 text-sm">
+        El título debe tener al menos 3 caracteres.
+      </p>
+      <button type="submit" [disabled]="taskForm.invalid && taskForm.touched"
+        [ngClass]="{ 'disabled:opacity-50': taskForm.invalid }"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 h-full">
+        Add?
+      </button>
+    </div>
   </form>
 
-    <ul *ngIf="tasks.length > 0; else noTasks" class="mt-5">
-      <li *ngFor="let task of tasks" 
-          class="flex justify-between p-1 bg-gray-50">
-        <span [class.completed]="task.completed" (click)="toggleTask(task)"
-          class="text-xs font-light text-black-700">
-          {{ task.title }}
-        </span>
-        <button (click)="deleteTask(task.id)" class="bg-sky-700 text-gray-700 border border-dotted border-black p-0.5">
-          ❌
-        </button>
-      </li>
-    </ul>
 
-    <ng-template #noTasks>
-      <p class="text--700 text-sm ml-10">Nothing here...</p>
-    </ng-template>
+
+  <ul *ngIf="tasks.length > 0; else noTasks" class="mt-5">
+    <li *ngFor="let task of tasks" class="flex justify-between p-1 bg-gray-50">
+      <span [class.completed]="task.completed" (click)="toggleTask(task)" class="text-xs font-light text-black-700">
+        {{ task.title }}
+      </span>
+      <button (click)="deleteTask(task.id)" class="bg-sky-700 text-gray-700 border border-dotted border-black p-0.5">
+        ❌
+      </button>
+    </li>
+  </ul>
+
+  <ng-template #noTasks>
+    <p class="text--700 text-sm ml-10">Nothing here...</p>
+  </ng-template>
 </div>
 
 <div class="w-full max-w-4xl mx-auto p-6">
   <div class="container bg-white border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700 p-10">
     <div class="search">
       <!-- Campo de búsqueda -->
-      <input
-        type="text"
-        placeholder="Search..."
-        [formControl]="searchControl"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5 mr-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      />
+      <input type="text" placeholder="Search..." [formControl]="searchControl"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5 mr-2 mb-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
       <!-- Mensaje cuando no hay resultados -->
       <p *ngIf="filteredTasks.length === 0 && searchControl.value.trim() !== ''">
@@ -48,10 +60,8 @@
       </p>
 
       <!-- Lista de tareas filtradas -->
-      <li
-        *ngFor="let task of filteredTasks"
-        class="flex items-center justify-between p-3 text-base font-bold text-black-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
-      >
+      <li *ngFor="let task of filteredTasks"
+        class="flex items-center justify-between p-3 text-base font-bold text-black-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
         <span>{{ task.title }}</span>
       </li>
     </div>
