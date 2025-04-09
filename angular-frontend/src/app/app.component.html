@@ -1,1 +1,49 @@
 <router-outlet />
+<app-toast />
+
+
+
+
+<!-------------Botones del Toast--------->
+
+<div class="p-8 max-w-4xl mx-auto">
+
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Sistema de Notificaciones</h2>
+
+    <div class="flex flex-wrap gap-4">
+
+        <button
+            class="px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow hover:bg-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+            (click)="showToastSuccess()">
+
+            Toast de Éxito
+
+        </button>
+
+        <button
+            class="px-4 py-2 bg-red-500 text-white font-medium rounded-md shadow hover:bg-red-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400"
+            (click)="showToastError()">
+
+            Toast de Error
+
+        </button>
+
+        <button
+            class="px-4 py-2 bg-blue-500 text-white font-medium rounded-md shadow hover:bg-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            (click)="showToastInfo()">
+
+            Toast de Info
+
+        </button>
+
+        <button
+            class="px-4 py-2 bg-yellow-500 text-white font-medium rounded-md shadow hover:bg-yellow-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            (click)="showToastWarning()">
+
+            Toast de Peligro
+
+        </button>
+
+    </div>
+
+</div>

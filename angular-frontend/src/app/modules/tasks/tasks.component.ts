@@ -22,17 +22,17 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 export class TasksComponent implements OnInit {
   tasks: Task[] = [];
   taskForm: FormGroup;
-  filteredTasks: Task [] = [];
+  filteredTasks: Task[] = [];
   searchControl: FormControl;
 
 
   constructor(private taskService: TaskService) {
 
     this.taskForm = new FormGroup({
-      title: new FormControl('', [Validators.required, Validators.minLength(3)]), 
+      title: new FormControl('', [Validators.required, Validators.minLength(3)]),
     })
 
-    this.searchControl = new FormControl ('');
+    this.searchControl = new FormControl('');
 
   }
 
@@ -40,43 +40,42 @@ export class TasksComponent implements OnInit {
     this.loadTasks();
 
     this.searchControl.valueChanges
-    .pipe(
-      debounceTime(100),
-      distinctUntilChanged()
-    ).subscribe(value => this.filterTasks(value))
+      .pipe(
+        debounceTime(100),
+        distinctUntilChanged()
+      ).subscribe(value => this.filterTasks(value))
   }
 
   loadTasks(): void {
     this.taskService.getTasks().subscribe(
-      (tasks) => 
-        {this.tasks = tasks
-        this.filteredTasks = []; 
-      }, 
+      (tasks) => {
+        this.tasks = tasks
+        this.filteredTasks = [];
+      },
       (error) => console.error('Error fetching tasks:', error)
     );
   }
 
   addTask(): void {
     if (this.taskForm.invalid) return;
-    const newTask: Task = { 
+    const newTask: Task = {
       id: 0,
-       title: this.taskForm.value.title,
-       completed: false
-       
-       };
+      title: this.taskForm.value.title,
+      completed: false
 
-    this.taskService.addTask(newTask).subscribe(() =>
-    {
+    };
+
+    this.taskService.addTask(newTask).subscribe(() => {
       this.loadTasks();
       this.taskForm.reset();
 
     });
 
-    }
-    toggleTask(task: Task): void {
-      task.completed = !task.completed;
-      this.taskService.updateTask(task).subscribe(() => this.loadTasks());
-     
+  }
+  toggleTask(task: Task): void {
+    task.completed = !task.completed;
+    this.taskService.updateTask(task).subscribe(() => this.loadTasks());
+
   }
   deleteTask(id: number): void {
     this.taskService.deleteTask(id).subscribe(() => this.loadTasks());
@@ -84,19 +83,19 @@ export class TasksComponent implements OnInit {
 
   filterTasks(searchTerm: string): void {
     const term = searchTerm.toLowerCase();
-    
+
     if (term === '') {
       this.filteredTasks = [];
       return;
     }
-    
+
     this.filteredTasks = this.tasks.filter(task =>
       task.title.toLowerCase().includes(term)
     )
   }
-  
 
-  
-  
+
+
+
 
 }
