@@ -51,26 +51,32 @@ class TaskController extends AbstractController
         $em->flush();
         return $this->json(['message' => 'Task deleted']);
     }
-
-    #[Route('/{id}', name: 'update_task', methods: ['PUT'])]
-    public function update($id, Request $request, EntityManagerInterface $em): JsonResponse
+    #[Route('', name: 'complete_all_tasks', methods: ['PUT'])]
+    public function completeAllTasks(EntityManagerInterface $em): JsonResponse
     {
-        $task = $em->getRepository(Task::class)->find($id);
-        if (!$task) {
-            return $this->json(['error' => 'Task not found'], 404);
+        // Buscamos todas las tareas
+        $tasks = $em->getRepository(Task::class)->findAll();
+        
+        if (empty($tasks)) {
+            return $this->json(['error' => 'Tasks not found'], 404);
         }
-        $params = json_decode($request->getContent(), true);
-        if (isset($params['title'])) {
-            $task->setTitle($params['title']);
+    
+        // Marcamos las tareas como completadas
+        foreach ($tasks as $task) {
+            $task->setCompleted(true);  // Nota: usa booleano true, no string "true"
         }
-        if (isset($params['completed'])) {
-            $task->setCompleted($params['completed']);
-        }
+    
+        // Guardar los cambios en bbdd
         $em->flush();
-        return $this->json([
+        
+        // Devolvemos respuesta
+        $data = array_map(fn($task) => [
             'id' => $task->getId(),
             'title' => $task->getTitle(),
             'completed' => $task->getCompleted()
-        ]);
+        ], $tasks);
+    
+        return $this->json($data);
     }
-}
+
+}    
