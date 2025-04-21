@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   backend:
     build:
@@ -18,11 +20,11 @@ services:
         until pg_isready -h db -U symfony -d symfony_db; do
           sleep 2;
         done;
-        
+
         if [ ! -f /var/www/app/vendor/autoload.php ]; then
           composer install;
         fi
-        
+
         php bin/console doctrine:database:create --if-not-exists;
         php bin/console doctrine:schema:update --force;
 
@@ -32,7 +34,6 @@ services:
 
         symfony server:start --no-tls --port=8000 --allow-all-ip;
       "
-
 
   db:
     image: postgres:13
@@ -55,7 +56,7 @@ services:
     build:
       context: ./angular-frontend
       dockerfile: Dockerfile
-    container_name: angular_frontend
+    container_name: angular_frontends
     restart: always
     working_dir: /app
     volumes:
@@ -66,7 +67,6 @@ services:
     ports:
       - "4200:4200"
     command: ["sh", "-c", "npm install && ng serve --host 0.0.0.0 --poll 2000 --watch"]
-
 
 volumes:
   pgdata:

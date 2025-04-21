@@ -41,5 +41,26 @@ class TaskRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //  
+    public function findAllOrdered(string $orden = 'ASC')
+    {
+        $orden = strtoupper ($orden) === 'DESC' ? 'DESC' : 'ASC';
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.id', $orden)
+            ->getQuery()
+            ->getResult();
+        
+        
+    }
+
+    public function createAtOrdered(string $orden = 'ASC')
+    {
+        $orden = strtoupper ($orden) === 'DESC' ? 'DESC' : 'ASC';
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.createdAt', $orden)
+            ->getQuery()
+            ->getResult();
+        
+        
+    }
+
 }

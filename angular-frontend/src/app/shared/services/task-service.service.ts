@@ -28,4 +28,9 @@ export class TaskService {
   deleteTask(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  getTaskByCreatedDate(orden: string = 'ASC'): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/ordenadas?orden=${orden}`);
+  }
+
 }
