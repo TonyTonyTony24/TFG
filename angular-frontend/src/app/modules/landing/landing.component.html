@@ -1,13 +1,44 @@
-<div class="h-full w-full flex items-center justify-center px-4 py-10">
-  <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg space-y-6 text-center">
-    
-    <h1 class="text-lg font-semibold text-red-600 dark:text-red-400"></h1>
-
-    <button 
-      routerLink="/tasks" 
-      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-all">
-      Click me
-    </button>
-
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Tu plataforma web de <strong>gestión vehicular</strong></h1>
+    <p>Gestiona mantenimientos, seguros, recordatorios e ITV desde un único lugar</p>
   </div>
+  <img src="assets/images/coche-interior.jpg" alt="Interior del coche" />
+</section>
+
+<!-- SERVICIOS -->
+<section class="servicios">
+  <h2>Nuestros Servicios</h2>
+  <div class="iconos">
+    <div><img src="assets/icons/vehiculo.png"><p>Gestión Vehicular</p></div>
+    <div><img src="assets/icons/recordatorios.png"><p>Recordatorios</p></div>
+    <div><img src="assets/icons/seguros.png"><p>Seguros</p></div>
+    <div><img src="assets/icons/itv.png"><p>ITV</p></div>
+  </div>
+</section>
+
+<!-- QUIÉNES SOMOS -->
+<section class="quienes-somos">
+  <div class="img"><img src="assets/images/mecanico.jpg" alt="Mecánico" /></div>
+  <div class="texto">
+    <h2>¿Quiénes Somos?</h2>
+    <p>Somos un equipo de expertos en el sector automotriz con pasión por la tecnología...</p>
+ 
+  </div>
+</section>
+
+<div>
+  <button routerLink="/auth">
+    Inicia sesión
+  </button>
 </div>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="col">©GMV<br>Gestión Mantenimiento Vehicular</div>
+  <div class="col"><strong>Enlaces Rápidos</strong><br>Inicio<br>Servicios<br>Contacto</div>
+  <div class="col"><strong>Contacto</strong><br>info&#64;gmv.com<br>+34 600 000 000</div>
+  <div class="col"><strong>Síguenos</strong><br><a href="#">Instagram</a></div>
+</footer>
