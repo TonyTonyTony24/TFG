@@ -1,6 +1,24 @@
-version: '3.9'
+version: '3.8'
 
 services:
+  db:
+    image: postgres:latest
+    container_name: symfony_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: symfony_db
+      POSTGRES_USER: symfony
+      POSTGRES_PASSWORD: symfony123
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U symfony -d symfony_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: ./symfony-backend
@@ -10,67 +28,34 @@ services:
     working_dir: /var/www/app
     volumes:
       - ./symfony-backend/app:/var/www/app
+    ports:
+      - "8010:8000"
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8000:8000"
-
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
     command: >
       bash -c "
-        until pg_isready -h db -U symfony -d symfony_db; do
-          sleep 2;
-        done;
-
-        if [ ! -f /var/www/app/vendor/autoload.php ]; then
-          composer install;
-        fi
-
-        php bin/console doctrine:database:create --if-not-exists;
-        php bin/console doctrine:schema:update --force;
-
-        if symfony server:status > /dev/null 2>&1; then
-          symfony server:stop;
-        fi
-
-        symfony server:start --no-tls --port=8000 --allow-all-ip;
+        composer install &&
+        php bin/console doctrine:database:create --if-not-exists &&
+        php bin/console doctrine:schema:update --force &&
+        symfony server:start --no-tls --port=8000 --allow-all-ip
       "
-
-  db:
-    image: postgres:13
-    container_name: symfony_postgres
-    restart: always
-    environment:
-      POSTGRES_USER: symfony
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: symfony_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U symfony -d symfony_db"]
-      interval: 10s
-      retries: 5
 
   frontend:
     build:
       context: ./angular-frontend
       dockerfile: Dockerfile
-    container_name: angular_frontends
-    restart: always
-    working_dir: /app
-    volumes:
-      - ./angular-frontend:/app
-      - /app/node_modules
-    depends_on:
-      - backend
+    container_name: angular_frontend
     ports:
       - "4200:4200"
-    command: ["sh", "-c", "npm install && ng serve --host 0.0.0.0 --poll 2000 --watch"]
+    volumes:
+      - ./angular-frontend:/usr/src/app
+    command: >
+      bash -c "
+        npm install &&
+        npm start
+      "
 
 volumes:
   pgdata:
+

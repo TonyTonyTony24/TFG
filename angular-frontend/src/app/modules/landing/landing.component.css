@@ -1,70 +1,215 @@
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #F5F5F5;
-  }
-  
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #F5F5F5;
+}
+
+/* BARRA SUPERIOR */
+.topbar {
+  background-color: #E6F0FA;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.topbar-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* BOTÓN LOGIN */
+.btn-login {
+  background-color: #2C74B3;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-login:hover {
+  background-color: #1f4d7a;
+  transform: translateY(-1px);
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 6rem 5% 4rem; /* espacio arriba para el header */
+  background: #E6F0FA;
+  flex-wrap: wrap;
+}
+
+.hero-texto {
+  flex: 1;
+  min-width: 280px;
+}
+
+.hero h1 {
+  color: #2C74B3;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.hero-imagen {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.imagen-bmw {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* SERVICIOS */
+.servicios {
+  padding: 3rem;
+  text-align: center;
+  background-color: #f5faff;
+}
+
+.servicios h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2B5FA8;
+}
+
+.iconos {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.iconos div {
+  text-align: center;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  width: 120px;
+}
+
+.iconos img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+}
+
+/* QUIÉNES SOMOS */
+.quienes-somos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  background: #fff;
+  padding: 3rem;
+}
+
+.quienes-somos .img img {
+  max-width: 300px;
+  border-radius: 0.5rem;
+}
+
+.quienes-somos .texto {
+  max-width: 500px;
+  text-align: left;
+}
+
+.quienes-somos h2 {
+  color: #2C74B3;
+  margin-bottom: 1rem;
+}
+
+/* BOTÓN TAREAS */
+.boton-ir-tareas {
+  margin-top: 1rem;
+  background-color: #2C74B3;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-ir-tareas:hover {
+  background-color: #1b4d7a;
+}
+
+/* FOOTER */
+.footer {
+  display: flex;
+  justify-content: space-around;
+  background: #2C74B3;
+  color: white;
+  padding: 2rem;
+}
+
+.footer .col {
+  max-width: 200px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
   .hero {
-    display: flex;
-    justify-content: space-between;
-    padding: 3rem;
-    background: #E6F0FA;
-    align-items: center;
-  }
-  
-  .hero-content {
-    max-width: 600px;
-  }
-  
-  .hero h1 {
-    color: #2C74B3;
-    font-size: 2.5rem;
-  }
-  
-  .servicios, .quienes-somos {
-    padding: 3rem;
+    flex-direction: column;
     text-align: center;
+    padding: 6rem 2rem 2rem;
   }
-  
-  .iconos {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
+
+  .hero-imagen {
     margin-top: 2rem;
   }
-  
-  .iconos div {
+
+  .imagen-bmw {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .quienes-somos {
+    flex-direction: column;
+    padding: 2rem;
     text-align: center;
   }
-  
-  .quienes-somos {
-    display: flex;
-    justify-content: center;
+
+  .quienes-somos .texto {
+    text-align: center;
+  }
+
+  .iconos {
+    flex-direction: column;
     align-items: center;
-    gap: 2rem;
-    background: #fff;
   }
-  
+
   .footer {
-    display: flex;
-    justify-content: space-around;
-    background: #2C74B3;
-    color: white;
-    padding: 2rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
   }
-  .boton-ir-tareas {
-    margin-top: 1rem;
-    background-color: #2C74B3;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .boton-ir-tareas:hover {
-    background-color: #1b4d7a;
-  }
-  
+}

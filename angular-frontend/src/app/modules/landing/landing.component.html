@@ -1,18 +1,32 @@
+<header class="topbar">
+  <div class="topbar-container">
+    <div></div> <!-- espacio a la izquierda -->
+    <button routerLink="/auth" class="btn-login">
+      Iniciar sesión
+    </button>
+  </div>
+</header>
+
+
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
+  <div class="hero-texto">
     <h1>Tu plataforma web de <strong>gestión vehicular</strong></h1>
     <p>Gestiona mantenimientos, seguros, recordatorios e ITV desde un único lugar</p>
   </div>
-  <img src="assets/images/coche-interior.jpg" alt="Interior del coche" />
+  <div class="hero-imagen">
+    <img src="assets/images/coche-interior.jpg" alt="Interior del coche" class="imagen-bmw" />
+  </div>
 </section>
+
+
 
 <!-- SERVICIOS -->
 <section class="servicios">
   <h2>Nuestros Servicios</h2>
   <div class="iconos">
     <div><img src="assets/icons/vehiculo.png"><p>Gestión Vehicular</p></div>
-    <div><img src="assets/icons/recordatorios.png"><p>Recordatorios</p></div>
+    <div><img src="assets/icons/recordatorio.png"><p>Recordatorio</p></div>
     <div><img src="assets/icons/seguros.png"><p>Seguros</p></div>
     <div><img src="assets/icons/itv.png"><p>ITV</p></div>
   </div>
@@ -20,19 +34,13 @@
 
 <!-- QUIÉNES SOMOS -->
 <section class="quienes-somos">
-  <div class="img"><img src="assets/images/mecanico.jpg" alt="Mecánico" /></div>
+  <div class="img"><img src="assets/images/mecanico.png" alt="Mecánico" /></div>
   <div class="texto">
     <h2>¿Quiénes Somos?</h2>
     <p>Somos un equipo de expertos en el sector automotriz con pasión por la tecnología...</p>
- 
   </div>
 </section>
 
-<div>
-  <button routerLink="/auth">
-    Inicia sesión
-  </button>
-</div>
 
 
 <!-- FOOTER -->
