@@ -3,10 +3,10 @@ version: '3.8'
 services:
   db:
     image: postgres:latest
-    container_name: symfony_db
+    container_name: tfg_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: symfony_db
+      POSTGRES_DB: gestion_vehiculos
       POSTGRES_USER: symfony
       POSTGRES_PASSWORD: symfony123
     ports:
@@ -14,7 +14,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U symfony -d symfony_db"]
+      test: ["CMD-SHELL", "pg_isready -U symfony -d gestion_vehiculos"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,39 +23,41 @@ services:
     build:
       context: ./symfony-backend
       dockerfile: ./docker/php/Dockerfile
-    container_name: symfony_backend
+    container_name: tfg_backend
     restart: unless-stopped
     working_dir: /var/www/app
     volumes:
       - ./symfony-backend/app:/var/www/app
+    environment:
+      DATABASE_URL: "postgresql://symfony:symfony123@db:5432/gestion_vehiculos"
     ports:
       - "8010:8000"
     depends_on:
       db:
         condition: service_healthy
-    command: >
+    command: > 
       bash -c "
-        composer install &&
-        php bin/console doctrine:database:create --if-not-exists &&
-        php bin/console doctrine:schema:update --force &&
-        symfony server:start --no-tls --port=8000 --allow-all-ip
+        composer install --no-interaction --optimize-autoloader && \
+        php bin/console doctrine:database:create --if-not-exists && \
+        php bin/console doctrine:schema:update --force && \
+        php -S 0.0.0.0:8000 -t public
       "
 
   frontend:
     build:
       context: ./angular-frontend
       dockerfile: Dockerfile
-    container_name: angular_frontend
-    ports:
-      - "4200:4200"
+    container_name: tfg_frontend
+    restart: unless-stopped
     volumes:
       - ./angular-frontend:/usr/src/app
+    ports:
+      - "4300:4200"
     command: >
       bash -c "
-        npm install &&
+        npm install && \
         npm start
       "
 
 volumes:
   pgdata:
-

@@ -25,9 +25,9 @@ docker compose up --build
 
 
 docker compose up --build
-El frontend estará disponible en: http://localhost:4200
+El frontend estará disponible en: http://localhost:4300
 
-El backend (API Symfony) en: http://localhost:8000
+El backend (API Symfony) en: http://localhost:8010
 
 📱 Funcionalidades implementadas
 Página de inicio con presentación de servicios
