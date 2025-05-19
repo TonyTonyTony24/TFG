@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: symfony
       POSTGRES_PASSWORD: symfony123
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -31,7 +31,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://symfony:symfony123@db:5432/gestion_vehiculos"
     ports:
-      - "8010:8000"
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -52,7 +52,7 @@ services:
     volumes:
       - ./angular-frontend:/usr/src/app
     ports:
-      - "4300:4200"
+      - "4200:4200"
     command: >
       bash -c "
         npm install && \
