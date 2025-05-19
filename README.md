@@ -101,7 +101,7 @@ Información de seguros
 
 Control y estado de revisiones ITV
 
-🔗 Repositorio
+Repositorio
 Este es el repositorio oficial del proyecto:
 https://github.com/TonyTonyTony24/TFG
 ![QR del repositorio](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://github.com/TonyTonyTony24/TFG)
