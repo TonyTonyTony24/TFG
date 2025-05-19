@@ -1,0 +1,108 @@
+<div class="auth-background flex relative justify-center items-center p-5 min-h-screen">
+  <main class="p-8 w-full bg-white rounded-2xl shadow-lg backdrop-blur max-w-[480px] max-sm:p-5">
+    <header class="mb-8 text-center">
+      <h1 class="mb-2 text-2xl text-zinc-900">GMV</h1>
+    </header>
+
+    <!-- Tabs Login / Registro -->
+    <nav class="flex mb-6 border-b border-solid border-b-zinc-100">
+      <button
+        class="flex-1 p-3 transition-all cursor-pointer border-[none] duration-[0.3s] ease-[ease]"
+        (click)="setActiveTab('login')"
+        [ngStyle]="{
+          borderBottom: activeTab === 'login' ? '2px solid #2C74B3' : 'none',
+          color: activeTab === 'login' ? '#2C74B3' : '#666',
+          fontWeight: activeTab === 'login' ? '600' : '400'
+        }">
+        Iniciar sesión
+      </button>
+      <button
+        class="flex-1 p-3 transition-all cursor-pointer border-[none] duration-[0.3s] ease-[ease]"
+        (click)="setActiveTab('register')"
+        [ngStyle]="{
+          borderBottom: activeTab === 'register' ? '2px solid #2C74B3' : 'none',
+          color: activeTab === 'register' ? '#2C74B3' : '#666',
+          fontWeight: activeTab === 'register' ? '600' : '400'
+        }">
+        Registrarse
+      </button>
+    </nav>
+
+    <!-- LOGIN FORM -->
+    <section *ngIf="activeTab === 'login'" class="login-form">
+      <form>
+        <div class="mb-4">
+          <label class="mb-2 text-sm text-neutral-600">Correo electrónico</label>
+          <input
+            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            type="email"
+            [(ngModel)]="loginForm.email"
+            name="email" />
+        </div>
+        <div class="mb-4">
+          <label class="mb-2 text-sm text-neutral-600">Contraseña</label>
+          <input
+            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            type="password"
+            [(ngModel)]="loginForm.password"
+            name="password" />
+        </div>
+        <button
+          type="button"
+          (click)="login()"
+          class="p-3.5 w-full text-base font-semibold bg-cyan-700 rounded-lg cursor-pointer border-[none] duration-[0.3s] ease-[ease] text-white hover:bg-[#235c8f]">
+          Entrar
+        </button>
+        <div class="mt-4 text-center">
+          <a href="#" class="text-sm text-cyan-700 no-underline hover:underline">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+      </form>
+    </section>
+
+    <!-- REGISTER FORM -->
+    <section *ngIf="activeTab === 'register'" class="register-form">
+      <form>
+        <div class="mb-4">
+          <label class="mb-2 text-sm text-neutral-600">Nombre completo</label>
+          <input
+            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            type="text"
+            [(ngModel)]="registerForm.fullName"
+            name="fullName" />
+        </div>
+        <div class="mb-4">
+          <label class="mb-2 text-sm text-neutral-600">Correo electrónico</label>
+          <input
+            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            type="email"
+            [(ngModel)]="registerForm.email"
+            name="email" />
+        </div>
+        <div class="mb-4">
+          <label class="mb-2 text-sm text-neutral-600">Contraseña</label>
+          <input
+            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            type="password"
+            [(ngModel)]="registerForm.password"
+            name="password" />
+        </div>
+        <div class="mb-6">
+          <label class="mb-2 text-sm text-neutral-600">Confirmar contraseña</label>
+          <input
+            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            type="password"
+            [(ngModel)]="registerForm.confirmPassword"
+            name="confirmPassword" />
+        </div>
+        <button
+          type="button"
+          (click)="register()"
+          class="p-3.5 w-full text-base font-semibold bg-cyan-700 rounded-lg cursor-pointer border-[none] duration-[0.3s] ease-[ease] text-white hover:bg-[#235c8f]">
+          Crear cuenta
+        </button>
+      </form>
+    </section>
+  </main>
+</div>

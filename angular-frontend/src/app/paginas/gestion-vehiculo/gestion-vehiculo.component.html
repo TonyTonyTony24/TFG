@@ -1,0 +1,146 @@
+<div>
+  <!-- NAVBAR -->
+  <nav class="px-8 py-4 mb-8 bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)]" role="navigation">
+    <div class="flex justify-between items-center mx-auto my-0 max-w-[1200px]">
+      <div class="flex gap-10 items-center">
+        <h2 class="m-0 text-2xl text-slate-700">🚗 GMV</h2>
+        <nav class="flex gap-5 max-sm:hidden">
+          <a href="#" class="no-underline text-slate-500 hover:text-[#3498db]">Dashboard</a>
+          <a href="#" class="no-underline text-slate-500 hover:text-[#3498db]">Mantenimientos</a>
+          <a href="#" class="no-underline text-slate-500 hover:text-[#3498db]">Documentos</a>
+        </nav>
+      </div>
+      <div class="flex gap-4 items-center">
+        <button class="p-2 rounded-full cursor-pointer bg-slate-50 border-none hover:bg-slate-100" aria-label="Notifications">🔔</button>
+        <div class="rounded-full cursor-pointer bg-slate-200 h-[35px] w-[35px] flex items-center justify-center" role="button" aria-label="User profile">👤</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="p-5 mx-auto my-0 bg-slate-100 max-w-[1200px] min-h-[calc(100vh_-_80px)] max-sm:p-2.5">
+    <!-- ENCABEZADO -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="m-0 text-3xl text-slate-700">Panel de Control GMV</h1>
+      <button class="flex gap-2 items-center px-5 py-2.5 bg-blue-500 hover:bg-[#2980b9] rounded-md cursor-pointer border-none text-white">
+        <span>➕</span>
+        <span>Nuevo Registro</span>
+      </button>
+    </div>
+
+    <div class="grid gap-5 grid-cols-[repeat(3,1fr)] max-md:grid-cols-[repeat(2,1fr)] max-sm:grid-cols-[1fr]">
+      <!-- INFORMACIÓN DEL VEHÍCULO -->
+      <section class="p-5 rounded-xl bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+        <h2 class="flex gap-2.5 items-center mb-5 text-xl text-slate-700">
+          <span>🚗</span>
+          <span>Información del Vehículo</span>
+        </h2>
+        <div class="grid gap-2.5">
+          <div><strong>Marca:</strong> <span>{{ vehicle.brand }}</span></div>
+          <div><strong>Modelo:</strong> <span>{{ vehicle.model }}</span></div>
+          <div><strong>Matrícula:</strong> <span>{{ vehicle.plate }}</span></div>
+          <div><strong>Año:</strong> <span>{{ vehicle.year }}</span></div>
+          <button class="px-4 py-2 mt-4 bg-blue-500 hover:bg-[#2980b9] rounded-md cursor-pointer border-none text-white">Editar Información</button>
+        </div>
+      </section>
+
+      <!-- PRÓXIMOS EVENTOS -->
+      <section class="p-5 rounded-xl bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+        <h2 class="flex gap-2.5 items-center mb-5 text-xl text-slate-700">
+          <span>⚠️</span>
+          <span>Próximos Eventos</span>
+        </h2>
+        <div class="grid gap-4">
+          <div *ngFor="let alert of alerts"
+               class="flex justify-between items-center p-4 rounded-lg"
+               [ngStyle]="{ backgroundColor: alert.status === 'danger' ? '#fee2e2' : '#fef3c7' }">
+            <div>
+              <strong>{{ alert.type }}</strong>
+              <div class="text-sm" [ngStyle]="{ color: alert.status === 'danger' ? '#dc2626' : '#92400e' }">
+                <span>Vence: </span>
+                <span>{{ alert.dueDate | date }}</span>
+              </div>
+            </div>
+            <span>{{ alert.status === 'danger' ? '🚨' : '⚠️' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- FORMULARIO DE MANTENIMIENTO -->
+      <section class="p-5 rounded-xl bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+        <h2 class="flex gap-2.5 items-center mb-5 text-xl text-slate-700">
+          <span>🔧</span>
+          <span>Registrar Mantenimiento</span>
+        </h2>
+        <form class="grid gap-4" (ngSubmit)="guardarMantenimiento()">
+          <div>
+            <label class="mb-1.5 text-gray-600">Fecha</label>
+            <input
+              type="date"
+              class="p-2 w-full rounded-md border border-solid"
+              [(ngModel)]="nuevoMantenimiento.fecha"
+              name="fecha"
+              required
+            />
+          </div>
+          <div>
+            <label class="mb-1.5 text-gray-600">Tipo de Mantenimiento</label>
+            <select
+              class="p-2 w-full rounded-md border border-solid"
+              [(ngModel)]="nuevoMantenimiento.tipo"
+              name="tipo"
+              required
+            >
+              <option value="">Seleccionar...</option>
+              <option value="Cambio de Aceite">Cambio de Aceite</option>
+              <option value="Neumáticos">Neumáticos</option>
+              <option value="Frenos">Frenos</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label class="mb-1.5 text-gray-600">Observaciones</label>
+            <textarea
+              class="p-2 w-full rounded-md border border-solid min-h-20"
+              [(ngModel)]="nuevoMantenimiento.observaciones"
+              name="observaciones"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="p-2.5 bg-emerald-500 hover:bg-[#059669] rounded-md cursor-pointer border-none text-white"
+          >
+            Guardar Registro
+          </button>
+        </form>
+      </section>
+    </div>
+
+    <!-- HISTORIAL DE MANTENIMIENTOS -->
+    <section class="p-5 mt-8 rounded-xl bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+      <h2 class="flex gap-2.5 items-center mb-5 text-xl text-slate-700">
+        <span>📋</span>
+        <span>Historial de Mantenimientos</span>
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b-2 border-b border-solid">
+              <th class="px-2 py-3">Fecha</th>
+              <th class="px-2 py-3">Tipo</th>
+              <th class="px-2 py-3">Observaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of maintenanceRecords" class="border-b border-solid">
+              <td class="px-2 py-3">{{ record.date }}</td>
+              <td class="px-2 py-3">{{ record.type }}</td>
+              <td class="px-2 py-3">{{ record.notes }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>

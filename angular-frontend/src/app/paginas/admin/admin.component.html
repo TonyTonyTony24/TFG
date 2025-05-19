@@ -1,0 +1,102 @@
+<div class="flex min-h-screen bg-slate-100">
+  <nav class="p-5 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.1)] w-[250px] max-md:w-[70px] max-sm:fixed max-sm:bottom-0 max-sm:z-10 max-sm:p-2.5 max-sm:w-full max-sm:h-auto">
+    <h1 class="mb-10 text-2xl text-slate-700 max-md:text-base">GMV Admin</h1>
+    <div class="flex flex-col gap-4 max-sm:flex-row max-sm:justify-around">
+      <button
+        *ngFor="let item of navigationItems; trackBy: trackByItem"
+        class="flex gap-2.5 items-center p-3 bg-transparent rounded-lg transition-all cursor-pointer border-[none] duration-[0.2s] text-slate-500 max-md:justify-center max-md:p-2 hover:bg-slate-100 hover:text-slate-800">
+        {{item}}
+      </button>
+    </div>
+  </nav>
+
+  <main class="flex-1 p-8 max-sm:pb-20">
+    <!-- Stats Section -->
+    <div class="grid gap-5 mb-8 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+      <div
+        class="p-5 bg-white rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)]"
+        *ngFor="let stat of [
+          { title: 'Total Usuarios', value: getStats().totalUsers, color: '#3b82f6' },
+          { title: 'Total Vehículos', value: getStats().totalVehicles, color: '#10b981' },
+          { title: 'Mantenimientos', value: getStats().totalMaintenance, color: '#8b5cf6' }
+        ]; trackBy: trackByStat">
+        <h3 class="mb-2.5 text-slate-500">{{stat.title}}</h3>
+        <p class="text-3xl font-bold" [style.color]="stat.color">{{stat.value}}</p>
+      </div>
+    </div>
+
+    <!-- Users Table Section -->
+    <div class="p-6 mb-8 bg-white rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+      <div class="flex justify-between items-center mb-5 max-sm:flex-col max-sm:gap-4">
+        <input
+          type="text"
+          placeholder="Buscar usuarios..."
+          class="px-4 py-2 rounded-md border border-solid border-slate-200 w-[300px] max-sm:w-full"
+          [(ngModel)]="searchTerm">
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse min-w-[600px]">
+          <thead>
+            <tr class="border-b-2 border-solid border-b-slate-200">
+              <th class="p-3 text-left">Nombre</th>
+              <th class="p-3 text-left">Email</th>
+              <th class="p-3 text-left">Vehículos</th>
+              <th class="p-3 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filterUsers(); trackBy: trackByUser"
+                class="border-b border-solid border-b-slate-200">
+              <td class="p-3">{{user.name}}</td>
+              <td class="p-3">{{user.email}}</td>
+              <td class="p-3">
+                <div class="flex flex-col gap-2">
+                  <button
+                    class="px-3 py-1.5 bg-white rounded-md border border-solid cursor-pointer border-slate-200 hover:bg-slate-50"
+                    (click)="showVehicles(user.id)">
+                    <span>Ver </span>
+                    <span>{{user.vehicles.length}} </span>
+                    <span>vehículo(s)</span>
+                  </button>
+
+                  <div *ngIf="selectedUserId === user.id" class="p-3 mt-1 rounded-md bg-slate-50">
+                    <div *ngFor="let vehicle of user.vehicles; let index = index; trackBy: trackByVehicle"
+                         class="px-0 py-2"
+                         [style.border-bottom]="index < user.vehicles.length - 1 ? '1px solid #e2e8f0' : 'none'">
+                      <p class="m-0">
+                        <span>{{vehicle.brand}} </span>
+                        <span>{{vehicle.model}}</span>
+                      </p>
+                      <p class="mx-0 mt-1 mb-0 text-sm text-slate-500">
+                        <span>{{vehicle.plate}} </span>
+                        <span>- </span>
+                        <span>{{vehicle.year}}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="p-3 text-right">
+                <!-- Add actions if needed -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="p-6 bg-white rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+      <h2 class="mb-5 text-xl text-slate-700">Notificaciones Recientes</h2>
+      <div class="flex flex-col gap-4">
+        <div *ngFor="let notification of notifications; trackBy: trackByNotification"
+             class="p-4 rounded-lg"
+             [style.background-color]="getNotificationBackground(notification.type)"
+             [style.color]="getNotificationColor(notification.type)">
+          {{notification.message}}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

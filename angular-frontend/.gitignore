@@ -1,0 +1,27 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Angular build output
+dist/
+.angular/
+out-tsc/
+tmp/
+
+# Editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Specific files
+.DS_Store
+Thumbs.db
+*.log
+
+# Angular frontend subfolder
+angular-frontend/node_modules/
+angular-frontend/dist/
+
+# Symfony backend (si aplica)
+symfony-backend/vendor/

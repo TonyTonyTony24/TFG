@@ -1,0 +1,41 @@
+<!-- HEADER / NAVBAR -->
+<header class="topbar bg-blue-100 py-4 px-6 flex justify-between items-center">
+  <div class="text-xl font-bold text-blue-900">GMV</div>
+
+  <!-- Navegación -->
+  <nav class="flex gap-4 text-blue-800 font-medium">
+    <a routerLink="/" routerLinkActive="underline">Inicio</a>
+    <a routerLink="/vehiculo" routerLinkActive="underline">Vehículo</a>
+    <a routerLink="/recordatorio" routerLinkActive="underline">Recordatorio</a>
+    <a routerLink="/seguros" routerLinkActive="underline">Seguros</a>
+    <a routerLink="/itv" routerLinkActive="underline">ITV</a>
+    <a routerLink="/tasks" routerLinkActive="underline">Tasks</a>
+  </nav>
+
+  <!-- Botones de login/logout -->
+  <div>
+    <!-- Si NO está logueado -->
+    <button
+      *ngIf="!isLoggedIn()"
+      routerLink="/auth"
+      class="btn-login bg-blue-700 text-white px-4 py-2 rounded"
+    >
+      Iniciar sesión
+    </button>
+
+    <!-- Si SÍ está logueado -->
+    <button
+      *ngIf="isLoggedIn()"
+      (click)="logout()"
+      class="btn-login bg-red-600 text-white px-4 py-2 rounded"
+    >
+      Cerrar sesión
+    </button>
+  </div>
+</header>
+
+<!-- VISTAS -->
+<router-outlet></router-outlet>
+
+<!-- NOTIFICACIONES -->
+<app-toast></app-toast>
