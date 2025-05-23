@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
     working_dir: /var/www/app
     volumes:
-      - ./symfony-backend/app:/var/www/app
+      - ./symfony-backend:/var/www/app
     environment:
       DATABASE_URL: "postgresql://symfony:symfony123@db:5432/gestion_vehiculos"
     ports:
