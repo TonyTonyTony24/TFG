@@ -11,14 +11,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class AuthController extends AbstractController
 {
     #[Route('/api/register', name: 'api_register', methods: ['POST'])]
-    public function register(Request $request, UserCreator $creator): JsonResponse
+    public function register(Request $req, UserCreator $creator): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($req->getContent(), true);
         if (empty($data['email']) || empty($data['password'])) {
             return $this->json(['error' => 'email y password son requeridos'], 400);
         }
 
-        $user = $creator->create($data['email'], $data['password']);
-        return $this->json(['id' => $user->getId(), 'email' => $user->getEmail()], 201);
+        // Antes: $user = $creator->create(...);
+        // Ahora:
+        $user = $creator->createUser($data['email'], $data['password']);
+
+        return $this->json(
+            ['id' => $user->getId(), 'email' => $user->getEmail()],
+            201
+        );
     }
 }
