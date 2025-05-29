@@ -1,13 +1,15 @@
 security:
-    password_hashers:
-        App\Entity\User:
-            algorithm: auto
+    enable_authenticator_manager: true
 
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
 
     firewalls:
         dev:
@@ -27,10 +29,9 @@ security:
         api:
             pattern: ^/api
             stateless: true
-            provider: app_user_provider
-            jwt: ~
+            jwt: ~   
 
     access_control:
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

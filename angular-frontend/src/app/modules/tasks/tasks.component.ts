@@ -1,6 +1,11 @@
 import { Component, OnInit, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskService } from '../../shared/services/task-service.service';
+import { TaskService } from '../../services/task-service.service';
+
+
+
+
+
 import { Task } from '../../shared/interfaces/task';
 import { RouterModule } from '@angular/router';
 import {
@@ -12,7 +17,7 @@ import {
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ToastComponent } from '../../shared/component/toast/toast.component';
 
-import { ToasterService } from '../../shared/services/toaster.service';
+import { ToasterService } from '../../services/toaster.service';
 import { Toast } from '../../shared/interfaces/toast';
  
  

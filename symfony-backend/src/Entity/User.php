@@ -11,18 +11,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private ?string $email = null;
 
-    /** @var array<string> */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $nombreUsuario = null;
+
 
     public function getId(): ?int
     {
@@ -75,9 +80,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getNombreUsuario(): ?string
+    {
+        return $this->nombreUsuario;
+    }
+
+    public function setNombreUsuario(string $nombreUsuario): self
+    {
+        $this->nombreUsuario = $nombreUsuario;
+        return $this;
+    }
+
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
+        // Clear any temporary sensitive data here (e.g., plainPassword)
         // $this->plainPassword = null;
     }
 }

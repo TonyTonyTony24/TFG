@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ToasterService } from '../../services/toaster.service';
+import { ToasterService } from '../../../services/toaster.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Toast } from '../../interfaces/toast';

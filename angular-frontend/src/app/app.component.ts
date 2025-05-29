@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router'; // RouterOutlet va aquí
 import { RouterModule } from '@angular/router'; // Este también es necesario
 import { ToastComponent } from './shared/component/toast/toast.component';
-import { ToasterService } from './shared/services/toaster.service';
+import { ToasterService } from './services/toaster.service';
 
 @Component({
   selector: 'app-root',

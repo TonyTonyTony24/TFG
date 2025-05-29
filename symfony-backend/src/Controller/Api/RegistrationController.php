@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationController
 {
@@ -16,25 +17,25 @@ class RegistrationController
      */
     public function register(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
+        UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $em
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
+
         if (!isset($data['email'], $data['nombre'], $data['password'])) {
             return new JsonResponse(['mensaje' => 'Datos incompletos'], 400);
         }
 
-        // Comprueba si existe ese email
         if ($em->getRepository(User::class)->findOneBy(['email' => $data['email']])) {
             return new JsonResponse(['mensaje' => 'Email ya registrado'], 409);
         }
 
-        // Crear y poblar entidad User
         $user = new User();
         $user->setEmail($data['email']);
         $user->setNombreUsuario($data['nombre']);
-        $hashed = $encoder->encodePassword($user, $data['password']);
-        $user->setPassword($hashed);
+
+        $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+        $user->setPassword($hashedPassword);
 
         $em->persist($user);
         $em->flush();
