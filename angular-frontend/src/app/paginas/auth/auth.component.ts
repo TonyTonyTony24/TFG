@@ -2,18 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
-interface LoginForm {
-  email: string;
-  password: string;
-}
-
-interface RegisterForm {
-  fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
 @Component({
   selector: 'app-auth',
@@ -41,51 +31,43 @@ interface RegisterForm {
 export class AuthComponent {
   activeTab: 'login' | 'register' = 'login';
 
-  loginForm: LoginForm = {
+  loginForm = {
     email: '',
     password: ''
   };
 
-  registerForm: RegisterForm = {
+  registerForm = {
     fullName: '',
     email: '',
     password: '',
     confirmPassword: ''
   };
 
-  constructor(private router: Router) {}
+  error: string = '';
 
-  setActiveTab(tab: 'login' | 'register'): void {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  setActiveTab(tab: 'login' | 'register') {
     this.activeTab = tab;
   }
 
   login(): void {
-    console.log('✅ login ejecutado');
+    const { email, password } = this.loginForm;
 
-    if (this.loginForm.email && this.loginForm.password) {
-      localStorage.setItem('token', 'usuario-autenticado');
-      this.router.navigateByUrl('/').then(() => location.reload());
-    } else {
-      alert('Completa todos los campos');
-    }
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.error = 'Credenciales incorrectas';
+      }
+    });
   }
 
   register(): void {
-    console.log('✅ register ejecutado');
-
-    const { fullName, email, password, confirmPassword } = this.registerForm;
-
-    if (!fullName || !email || !password || !confirmPassword) {
-      alert('Todos los campos son obligatorios');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
-
-    localStorage.setItem('token', 'usuario-autenticado');
-    this.router.navigateByUrl('/').then(() => location.reload());
+    console.log(this.registerForm);
   }
 }

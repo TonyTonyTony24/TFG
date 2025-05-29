@@ -11,10 +11,13 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/login`, {
+      email: email,
+      password: password,
+    }).pipe(
       tap((response) => {
         if (response.token) {
-          localStorage.setItem('token', response.token); // ✅ Guarda el token
+          localStorage.setItem('token', response.token);
           console.log('Token guardado:', response.token);
         }
       })
