@@ -1,9 +1,0 @@
-framework:
-    secret: '%env(APP_SECRET)%'
-  
-    http_method_override: true
-    session:
-        handler_id: null
-        cookie_secure: auto
-    csrf_protection: true
-    validation: { enable_annotations: true }

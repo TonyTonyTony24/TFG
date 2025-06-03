@@ -1,7 +1,0 @@
-controllers:
-  resource: '../src/Controller/'
-  type: annotation
-
-api_login:
-    path: /api/login
-    methods: [POST]

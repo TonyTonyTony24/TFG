@@ -10,7 +10,6 @@ RUN apt update && apt install -y \
     unzip \
     curl \
     git \
-    postgresql-client \
     libpq-dev \
     && git config --global user.email "you@example.com" && git config --global user.name "Your Name" \
     && docker-php-ext-configure intl \
@@ -34,8 +33,6 @@ COPY ./docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-
-
 
 CMD sh -c "composer install;composer require nelmio/cors-bundle;php bin/console doctrine:database:create --if-not-exists;php bin/console doctrine:migrations:migrate --no-interaction;apache2-foreground"
 

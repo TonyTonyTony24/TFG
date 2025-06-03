@@ -1,65 +1,50 @@
-version: '3.8'
-
 services:
+  backend:
+    build:
+      context: ./symfony-backend
+      dockerfile: ./docker/php/Dockerfile
+    container_name: symfony_backend
+    restart: always
+    working_dir: /var/www/app  # Adjusted working directory
+    volumes:
+      - ./symfony-backend/app:/var/www/app  # FIXED: Mount the correct directory
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command:
+      bash -c "composer install && php bin/console doctrine:schema:update --force && symfony server:start --no-tls --port=8000 --allow-all-ip"
   db:
-    image: postgres:latest
-    container_name: tfg_db
-    restart: unless-stopped
+    image: postgres:13
+    container_name: symfony_postgres
+    restart: always
     environment:
-      POSTGRES_DB: gestion_vehiculos
       POSTGRES_USER: symfony
-      POSTGRES_PASSWORD: symfony123
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: symfony_db
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U symfony -d gestion_vehiculos"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U symfony -d symfony_db"]
+      interval: 10s
       retries: 5
-
-  backend:
-    build:
-      context: ./symfony-backend
-      dockerfile: ./docker/php/Dockerfile
-    container_name: tfg_backend
-    restart: unless-stopped
-    working_dir: /var/www/app
-    volumes:
-      - ./symfony-backend:/var/www/app
-    environment:
-      DATABASE_URL: "postgresql://symfony:symfony123@db:5432/gestion_vehiculos"
-      JWT_PASSPHRASE: "MiJWTSecreta123!"
-
-    ports:
-      - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-    command: > 
-      bash -c "
-        composer install --no-interaction --optimize-autoloader && \
-        php bin/console doctrine:database:create --if-not-exists && \
-        php bin/console doctrine:schema:update --force && \
-        php -S 0.0.0.0:8000 -t public
-      "
-
   frontend:
     build:
       context: ./angular-frontend
       dockerfile: Dockerfile
-    container_name: tfg_frontend
-    restart: unless-stopped
+    container_name: angular_frontend
+    restart: always
+    working_dir: /app
     volumes:
-      - ./angular-frontend:/usr/src/app
+      - ./angular-frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
     ports:
       - "4200:4200"
-    command: >
-      bash -c "
-        npm install && \
-        npm start
-      "
-
+    command: ["sh", "-c", "npm install && ng serve --host 0.0.0.0 --poll 2000 --watch"]
 volumes:
   pgdata:
