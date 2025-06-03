@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './modules/landing/landing.component';
-import { TasksComponent } from './modules/tasks/tasks.component';
 import { GestionVehiculoComponent } from './paginas/gestion-vehiculo/gestion-vehiculo.component';
 import { RecordatorioComponent } from './paginas/recordatorio/recordatorio.component';
 import { SegurosComponent } from './paginas/seguros/seguros.component';
@@ -9,7 +8,6 @@ import { AdminComponent } from './paginas/admin/admin.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
-  { path: 'tasks', component: TasksComponent },
   {
     path: 'auth',
     loadComponent: () =>

@@ -1,9 +1,9 @@
 <?php
 namespace App\Security;
-
 use App\Entity\User;
-use App\Entity\Usuarios;
-use App\Repository\UsuariosRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,68 +13,70 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport; 
-use Firebase\JWT\JWT; 
-use Firebase\JWT\Key;
-use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 class CustomAuthenticator extends AbstractAuthenticator
 {
-    private $em;
+    private EntityManagerInterface $em;
     public function __construct(EntityManagerInterface $em)
     {
-        $this->em=$em; 
+        $this->em = $em;
     }
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-AUTH-TOKEN');
+        // Debug: Verificar todas las cookies
+        error_log('===== DEBUG AUTHENTICATOR =====');
+        error_log('URL: ' . $request->getUri());
+        error_log('Cookies disponibles: ' . json_encode($request->cookies->all()));
+        error_log('Headers disponibles: ' . json_encode($request->headers->all()));
+        // Verificar si existe token en cabecera o en cookie
+        $hasHeaderToken = $request->headers->has('X-AUTH-TOKEN');
+        $hasCookieToken = $request->cookies->has('X-AUTH-TOKEN'); // ¡CAMBIO AQUÍ!
+        error_log('Tiene X-AUTH-TOKEN en header: ' . ($hasHeaderToken ? 'SÍ' : 'NO'));
+        error_log('Tiene X-AUTH-TOKEN en cookie: ' . ($hasCookieToken ? 'SÍ' : 'NO'));
+        if ($hasHeaderToken) {
+            error_log('Valor X-AUTH-TOKEN header: ' . $request->headers->get('X-AUTH-TOKEN'));
+        }
+        if ($hasCookieToken) {
+            error_log('Valor X-AUTH-TOKEN cookie: ' . $request->cookies->get('X-AUTH-TOKEN'));
+        }
+        error_log('================================');
+        return $hasHeaderToken || $hasCookieToken;
     }
-
     public function authenticate(Request $request): Passport
     {
-        $apiToken = $request->headers->get('X-AUTH-TOKEN');
-        if(null===$apiToken)
-        {
-            throw new CustomUserMessageAuthenticationException('Se necesita token de autenticar');
+        // Obtener token de cabecera o cookie
+        $apiToken = $request->headers->get('X-AUTH-TOKEN') ?? $request->cookies->get('X-AUTH-TOKEN'); // ¡CAMBIO AQUÍ!
+        if (null === $apiToken) {
+            throw new CustomUserMessageAuthenticationException('Se necesita token para autenticar.');
         }
         try {
-            $decode = JWT::decode($apiToken, new Key($_ENV['JWT_SECRET'], 'HS512'));
-            $user = $this->em->getRepository(User::class)->findOneBy(['id' => $decode->aud]);
-            if(!$user)
-            {
-                return new Passport(new UserBadge(''), new PasswordCredentials(''));
-            }else
-            {
-                return new SelfValidatingPassport(new UserBadge($user->getEmail()) );
+            // Decodificar el token usando la clave secreta y el algoritmo
+            $decoded = JWT::decode($apiToken, new Key($_ENV['JWT_SECRET'], 'HS512'));
+            error_log('Token decodificado exitosamente. Usuario ID: ' . $decoded->aud);
+            // Buscar el usuario con el ID del token (se guardó en el campo 'aud')
+            $user = $this->em->getRepository(User::class)->findOneBy(['id' => $decoded->aud]);
+            if (!$user) {
+                error_log('Usuario no encontrado con ID: ' . $decoded->aud);
+                throw new CustomUserMessageAuthenticationException('Usuario no encontrado.');
             }
-        } catch (\Throwable $th) {
-             return new Passport(new UserBadge(''), new PasswordCredentials(''));
+            error_log('Usuario encontrado: ' . $user->getEmail());
+            return new SelfValidatingPassport(new UserBadge($user->getEmail()));
+        } catch (\Throwable $e) {
+            error_log('Error en autenticación: ' . $e->getMessage());
+            throw new CustomUserMessageAuthenticationException('Token inválido o expirado: ' . $e->getMessage());
         }
-
     }
-
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // on success, let the request continue
+        error_log('Autenticación exitosa para: ' . $token->getUserIdentifier());
         return null;
     }
-
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        error_log('Fallo de autenticación: ' . $exception->getMessage());
         $data = [
-            // you may want to customize or obfuscate the message first
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
         ];
-
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 }

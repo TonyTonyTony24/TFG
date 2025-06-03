@@ -7,100 +7,95 @@
     <!-- Tabs Login / Registro -->
     <nav class="flex mb-6 border-b border-solid border-b-zinc-100">
       <button
-        class="flex-1 p-3 transition-all cursor-pointer border-[none] duration-[0.3s] ease-[ease]"
+        class="flex-1 p-3 transition-all cursor-pointer border-[none] duration-[0.3s]"
         (click)="setActiveTab('login')"
         [ngStyle]="{
           borderBottom: activeTab === 'login' ? '2px solid #2C74B3' : 'none',
           color: activeTab === 'login' ? '#2C74B3' : '#666',
           fontWeight: activeTab === 'login' ? '600' : '400'
-        }">
-        Iniciar sesión
-      </button>
+        }">Iniciar sesión</button>
       <button
-        class="flex-1 p-3 transition-all cursor-pointer border-[none] duration-[0.3s] ease-[ease]"
+        class="flex-1 p-3 transition-all cursor-pointer border-[none] duration-[0.3s]"
         (click)="setActiveTab('register')"
         [ngStyle]="{
           borderBottom: activeTab === 'register' ? '2px solid #2C74B3' : 'none',
           color: activeTab === 'register' ? '#2C74B3' : '#666',
           fontWeight: activeTab === 'register' ? '600' : '400'
-        }">
-        Registrarse
-      </button>
+        }">Registrarse</button>
     </nav>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="mb-4 text-sm text-red-600 text-center">
+      {{ error }}
+    </div>
 
     <!-- LOGIN FORM -->
     <section *ngIf="activeTab === 'login'" class="login-form">
-      <form>
+      <form (ngSubmit)="login()">
         <div class="mb-4">
           <label class="mb-2 text-sm text-neutral-600">Correo electrónico</label>
           <input
-            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            class="p-3 w-full text-sm rounded-lg border border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
             type="email"
             [(ngModel)]="loginForm.email"
-            name="email" />
+            name="loginEmail" />
         </div>
-        <div class="mb-4">
+        <div class="mb-4 relative">
           <label class="mb-2 text-sm text-neutral-600">Contraseña</label>
           <input
-            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
-            type="password"
+            class="p-3 w-full text-sm rounded-lg border border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            [type]="showPassword ? 'text' : 'password'"
             [(ngModel)]="loginForm.password"
-            name="password" />
+            name="loginPassword" />
+          <button type="button" class="absolute right-3 top-[38px] text-xs text-blue-600" (click)="togglePassword()">
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
         </div>
         <button
-          type="button"
-          (click)="login()"
-          class="p-3.5 w-full text-base font-semibold bg-cyan-700 rounded-lg cursor-pointer border-[none] duration-[0.3s] ease-[ease] text-white hover:bg-[#235c8f]">
-          Entrar
+          type="submit"
+          [disabled]="isLoading"
+          class="p-3.5 w-full text-base font-semibold bg-cyan-700 text-white rounded-lg hover:bg-[#235c8f]">
+          {{ isLoading ? 'Cargando...' : 'Entrar' }}
         </button>
         <div class="mt-4 text-center">
-          <a href="#" class="text-sm text-cyan-700 no-underline hover:underline">
-            ¿Olvidaste tu contraseña?
-          </a>
+          <a href="#" class="text-sm text-cyan-700 hover:underline">¿Olvidaste tu contraseña?</a>
         </div>
       </form>
     </section>
 
     <!-- REGISTER FORM -->
     <section *ngIf="activeTab === 'register'" class="register-form">
-      <form>
+      <form (ngSubmit)="register()">
         <div class="mb-4">
           <label class="mb-2 text-sm text-neutral-600">Nombre completo</label>
           <input
-            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            class="p-3 w-full text-sm rounded-lg border border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
             type="text"
-            [(ngModel)]="registerForm.fullName"
-            name="fullName" />
+            [(ngModel)]="registerForm.name"
+            name="name" />
         </div>
         <div class="mb-4">
           <label class="mb-2 text-sm text-neutral-600">Correo electrónico</label>
           <input
-            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            class="p-3 w-full text-sm rounded-lg border border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
             type="email"
             [(ngModel)]="registerForm.email"
-            name="email" />
+            name="registerEmail" />
         </div>
         <div class="mb-4">
           <label class="mb-2 text-sm text-neutral-600">Contraseña</label>
           <input
-            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
-            type="password"
+            class="p-3 w-full text-sm rounded-lg border border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
+            [type]="showPassword ? 'text' : 'password'"
             [(ngModel)]="registerForm.password"
-            name="password" />
+            name="registerPassword" />
         </div>
-        <div class="mb-6">
-          <label class="mb-2 text-sm text-neutral-600">Confirmar contraseña</label>
-          <input
-            class="p-3 w-full text-sm rounded-lg border border-solid border-zinc-300 focus:outline-none focus:border-[#2c74b3]"
-            type="password"
-            [(ngModel)]="registerForm.confirmPassword"
-            name="confirmPassword" />
-        </div>
+        
         <button
-          type="button"
-          (click)="register()"
-          class="p-3.5 w-full text-base font-semibold bg-cyan-700 rounded-lg cursor-pointer border-[none] duration-[0.3s] ease-[ease] text-white hover:bg-[#235c8f]">
-          Crear cuenta
+          type="submit"
+          [disabled]="isLoading"
+          class="p-3.5 w-full text-base font-semibold bg-cyan-700 text-white rounded-lg hover:bg-[#235c8f]">
+          {{ isLoading ? 'Registrando...' : 'Crear cuenta' }}
         </button>
       </form>
     </section>

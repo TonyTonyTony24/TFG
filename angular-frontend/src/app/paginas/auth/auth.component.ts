@@ -1,91 +1,114 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
-
-interface RegisterForm {
-  fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { AuthService } from '../../shared/services/auth.service';
+import { RegistroService } from '../../shared/services/registro.service';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './auth.component.html',
-  styles: [`
-    :host {
-      display: contents;
-    }
-    .auth-background::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0.1;
-      background-image: radial-gradient(#2c74b3 0.75px, transparent 0.75px);
-      background-size: 24px 24px;
-      pointer-events: none;
-    }
-  `]
+  styleUrls: ['./auth.component.css']
 })
 export class AuthComponent {
   activeTab: 'login' | 'register' = 'login';
+  isLoading = false;
+  error = '';
+  showPassword = false;
 
-  loginForm: LoginForm = {
+  loginForm = {
     email: '',
     password: ''
   };
 
-  registerForm: RegisterForm = {
-    fullName: '',
+  registerForm = {
+    name: '',
     email: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   };
 
-  constructor(private router: Router) {}
+  private authService = inject(AuthService);
+  private registroService = inject(RegistroService);
+  private router = inject(Router);
 
   setActiveTab(tab: 'login' | 'register'): void {
+    this.error = '';
     this.activeTab = tab;
   }
 
-  login(): void {
-    console.log('✅ login ejecutado');
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 
-    if (this.loginForm.email && this.loginForm.password) {
-      localStorage.setItem('token', 'usuario-autenticado');
-      this.router.navigateByUrl('/').then(() => location.reload());
-    } else {
-      alert('Completa todos los campos');
+  login(): void {
+    const { email, password } = this.loginForm;
+
+    if (!email || !password) {
+      this.error = 'Completa todos los campos';
+      return;
     }
+
+    this.isLoading = true;
+    this.authService.login(this.loginForm).subscribe({
+      next: () => {
+        this.authService.fetchUser().subscribe({
+          next: (user) => {
+            if (!user) {
+              this.error = 'Error al obtener usuario';
+              this.isLoading = false;
+              return;
+            }
+            const role = user.role[0];
+            this.redirectUser(role);
+          },
+          error: () => {
+            this.error = 'No se pudo obtener el usuario';
+            this.isLoading = false;
+          }
+        });
+      },
+      error: () => {
+        this.error = 'Credenciales incorrectas o error del servidor';
+        this.isLoading = false;
+      }
+    });
   }
 
   register(): void {
-    console.log('✅ register ejecutado');
+    const { name, email, password } = this.registerForm;
 
-    const { fullName, email, password, confirmPassword } = this.registerForm;
-
-    if (!fullName || !email || !password || !confirmPassword) {
-      alert('Todos los campos son obligatorios');
+    if (!name || !email || !password) {
+      this.error = 'Todos los campos son obligatorios';
       return;
     }
 
-    if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
+    this.isLoading = true;
 
-    localStorage.setItem('token', 'usuario-autenticado');
-    this.router.navigateByUrl('/').then(() => location.reload());
+    this.registroService.sendData({ name, email, password }).subscribe({
+      next: () => {
+        alert('Te has registrado exitosamente.\nRevisa tu email para activar tu cuenta.');
+        this.setActiveTab('login');
+        this.isLoading = false;
+      },
+      error: () => {
+        this.error = 'Error al registrar. Intenta nuevamente.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private redirectUser(role: string): void {
+    switch (role) {
+      case 'ROLE_SUPERADMIN':
+        this.router.navigate(['/dashboardadmin']);
+        break;
+      case 'ROLE_USER':
+        this.router.navigate(['/dashboardusuario']);
+        break;
+      default:
+        this.router.navigate(['/']);
+    }
   }
 }
