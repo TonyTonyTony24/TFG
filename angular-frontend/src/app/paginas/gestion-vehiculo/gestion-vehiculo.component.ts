@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-gestion-vehiculo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './gestion-vehiculo.component.html',
   styleUrls: ['./gestion-vehiculo.component.css']
 })
 export class GestionVehiculoComponent {
   vehicle = {
-    brand: 'Toyota',
-    model: 'Corolla',
-    plate: '1234-ABC',
-    year: 2020
+    marca: '',
+    modelo: '',
+    matricula: '',
+    anio: null
   };
 
   alerts = [
@@ -49,6 +50,8 @@ export class GestionVehiculoComponent {
     observaciones: ''
   };
 
+  constructor(private http: HttpClient) {}
+
   guardarMantenimiento() {
     this.maintenanceRecords.push({
       date: this.nuevoMantenimiento.fecha,
@@ -61,5 +64,12 @@ export class GestionVehiculoComponent {
       tipo: '',
       observaciones: ''
     };
+  }
+
+  registrarVehiculo() {
+    this.http.post('http://localhost:8000/api/vehiculos', this.vehicle).subscribe({
+      next: () => alert('Vehículo registrado correctamente'),
+      error: (err) => alert('Error al registrar vehículo: ' + err.message)
+    });
   }
 }
