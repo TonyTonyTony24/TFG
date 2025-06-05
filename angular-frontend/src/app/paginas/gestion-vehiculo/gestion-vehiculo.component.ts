@@ -1,20 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-vehiculo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './gestion-vehiculo.component.html',
   styleUrls: ['./gestion-vehiculo.component.css']
 })
 export class GestionVehiculoComponent {
   vehicle = {
-    brand: 'Toyota',
-    model: 'Corolla',
-    plate: '1234-ABC',
-    year: 2020
+    marca: '',
+    modelo: '',
+    matricula: '',
+    anio: null
   };
 
   alerts = [
@@ -49,6 +51,8 @@ export class GestionVehiculoComponent {
     observaciones: ''
   };
 
+  constructor(private http: HttpClient, private router: Router) {} // 👈 Añadido Router
+
   guardarMantenimiento() {
     this.maintenanceRecords.push({
       date: this.nuevoMantenimiento.fecha,
@@ -61,5 +65,21 @@ export class GestionVehiculoComponent {
       tipo: '',
       observaciones: ''
     };
+  }
+
+  registrarVehiculo() {
+    this.http.post<any>('http://localhost:8000/api/vehiculos', this.vehicle).subscribe({
+      next: (res) => {
+        const id = res?.id;
+        if (id) {
+          this.router.navigate(['/admin/vehiculos', id, 'itv']);
+        } else {
+          alert('Vehículo creado pero no se recibió ID.');
+        }
+      },
+      error: (err) => {
+        alert('Error al registrar vehículo: ' + err.message);
+      }
+    });
   }
 }
