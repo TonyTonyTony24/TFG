@@ -1,35 +1,18 @@
 import { Routes } from '@angular/router';
 
 import { LandingComponent } from './modules/landing/landing.component';
-import { GestionVehiculoComponent } from './paginas/gestion-vehiculo/gestion-vehiculo.component';
-import { RecordatorioComponent } from './paginas/recordatorio/recordatorio.component';
-import { SegurosComponent } from './paginas/seguros/seguros.component';
-import { ItvComponent } from './paginas/itv/itv.component';
 import { AdminComponent } from './paginas/admin/admin.component';
+import { VehiculoDetalleComponent } from './paginas/admin/vehiculo-detalle/vehiculo-detalle.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
 
-  // Ruta de autenticación (lazy-loaded)
   {
     path: 'auth',
     loadComponent: () =>
       import('./paginas/auth/auth.component').then((m) => m.AuthComponent)
   },
 
-  // Página para gestionar vehículos
-  { path: 'vehiculo', component: GestionVehiculoComponent },
-
-  // Página para seguros
-  { path: 'seguros', component: SegurosComponent },
-
-  // Página para ITV
-  { path: 'itv', component: ItvComponent },
-
-  // Página de recordatorios
-  { path: 'recordatorio', component: RecordatorioComponent },
-
-  // Panel de administrador con rutas hijas
   {
     path: 'admin',
     component: AdminComponent,
@@ -41,6 +24,16 @@ export const routes: Routes = [
             (m) => m.DashboardComponent
           )
       },
+
+      {
+        path: 'vehiculos/nuevo',
+        loadComponent: () =>
+          import('./paginas/gestion-vehiculo/gestion-vehiculo.component').then(
+            (m) => m.GestionVehiculoComponent
+          )
+      },
+
+
       {
         path: 'usuarios',
         loadComponent: () =>
@@ -54,11 +47,67 @@ export const routes: Routes = [
           import('./paginas/admin/configuracion/configuracion.component').then(
             (m) => m.ConfiguracionComponent
           )
+      },
+      {
+        path: 'mantenimientos',
+        loadComponent: () =>
+          import('./paginas/admin/vehiculo-mantenimientos/vehiculo-mantenimientos.component').then(
+            (m) => m.VehiculoMantenimientosComponent
+          )
+      },
+      {
+        path: 'seguros',
+        loadComponent: () =>
+          import('./paginas/admin/vehiculo-seguros/vehiculo-seguros.component').then(
+            (m) => m.VehiculoSegurosComponent
+          )
+      },
+      {
+        path: 'itv',
+        loadComponent: () =>
+          import('./paginas/admin/vehiculo-itv/vehiculo-itv.component').then(
+            (m) => m.VehiculoItvComponent
+          )
+      },
+      // ✅ RUTA para listado de vehículos
+      {
+        path: 'vehiculos',
+        loadComponent: () =>
+          import('./paginas/admin/vehiculos.component').then(
+            (m) => m.VehiculosComponent
+          )
+      },
+      // ✅ RUTA para detalle de un vehículo
+      {
+        path: 'vehiculos/:id',
+        component: VehiculoDetalleComponent,
+        children: [
+          {
+            path: 'itv',
+            loadComponent: () =>
+              import('./paginas/admin/vehiculo-itv/vehiculo-itv.component').then(
+                (m) => m.VehiculoItvComponent
+              )
+          },
+          {
+            path: 'seguros',
+            loadComponent: () =>
+              import('./paginas/admin/vehiculo-seguros/vehiculo-seguros.component').then(
+                (m) => m.VehiculoSegurosComponent
+              )
+          },
+          {
+            path: 'mantenimientos',
+            loadComponent: () =>
+              import('./paginas/admin/vehiculo-mantenimientos/vehiculo-mantenimientos.component').then(
+                (m) => m.VehiculoMantenimientosComponent
+              )
+          }
+        ]
       }
     ]
   },
 
-  // Ruta de error 404 (fallback)
   {
     path: '**',
     loadComponent: () =>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-vehiculo',
@@ -50,7 +51,7 @@ export class GestionVehiculoComponent {
     observaciones: ''
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {} // 👈 Añadido Router
 
   guardarMantenimiento() {
     this.maintenanceRecords.push({
@@ -67,9 +68,18 @@ export class GestionVehiculoComponent {
   }
 
   registrarVehiculo() {
-    this.http.post('http://localhost:8000/api/vehiculos', this.vehicle).subscribe({
-      next: () => alert('Vehículo registrado correctamente'),
-      error: (err) => alert('Error al registrar vehículo: ' + err.message)
+    this.http.post<any>('http://localhost:8000/api/vehiculos', this.vehicle).subscribe({
+      next: (res) => {
+        const id = res?.id;
+        if (id) {
+          this.router.navigate(['/admin/vehiculos', id, 'itv']);
+        } else {
+          alert('Vehículo creado pero no se recibió ID.');
+        }
+      },
+      error: (err) => {
+        alert('Error al registrar vehículo: ' + err.message);
+      }
     });
   }
 }
