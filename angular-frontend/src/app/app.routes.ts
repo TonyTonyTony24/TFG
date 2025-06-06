@@ -24,7 +24,6 @@ export const routes: Routes = [
             (m) => m.DashboardComponent
           )
       },
-
       {
         path: 'vehiculos/nuevo',
         loadComponent: () =>
@@ -32,8 +31,6 @@ export const routes: Routes = [
             (m) => m.GestionVehiculoComponent
           )
       },
-
-
       {
         path: 'usuarios',
         loadComponent: () =>
@@ -69,7 +66,6 @@ export const routes: Routes = [
             (m) => m.VehiculoItvComponent
           )
       },
-      // ✅ RUTA para listado de vehículos
       {
         path: 'vehiculos',
         loadComponent: () =>
@@ -77,7 +73,6 @@ export const routes: Routes = [
             (m) => m.VehiculosComponent
           )
       },
-      // ✅ RUTA para detalle de un vehículo
       {
         path: 'vehiculos/:id',
         component: VehiculoDetalleComponent,
@@ -106,6 +101,17 @@ export const routes: Routes = [
         ]
       }
     ]
+  },
+
+  {
+    path: 'dashboardusuario',
+    redirectTo: 'admin',
+    pathMatch: 'full'
+  },
+  {
+    path: 'vehiculo',
+    redirectTo: 'admin/vehiculos',
+    pathMatch: 'full'
   },
 
   {
