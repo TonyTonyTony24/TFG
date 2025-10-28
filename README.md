@@ -1,6 +1,6 @@
 # GMV – Gestión de Mantenimiento de Vehículos 🚗
 
-Este proyecto forma parte del Trabajo de Fin de Grado del Grado en Ingeniería Informática, y consiste en el desarrollo de una plataforma web para la gestión de vehículos, recordatorios de mantenimiento, seguros e ITV, con una interfaz tanto para usuarios como para administradores.
+Este proyecto forma parte del Trabajo de Fin de Grado del Grado en (DAW), y consiste en el desarrollo de una plataforma web para la gestión de vehículos, recordatorios de mantenimiento, seguros e ITV, con una interfaz tanto para usuarios como para administradores.
 
 ---
 
@@ -105,6 +105,7 @@ Repositorio
 Este es el repositorio oficial del proyecto:
 https://github.com/TonyTonyTony24/TFG
 ![QR del repositorio](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://github.com/TonyTonyTony24/TFG)
+
 
 
 
