@@ -1,0 +1,48 @@
+<!-- FORMULARIO DE MANTENIMIENTO -->
+<section class="p-5 rounded-xl bg-white shadow">
+  <h2 class="mb-5 text-xl text-slate-700">🔧 Registrar Mantenimiento</h2>
+  <form class="grid gap-4" (ngSubmit)="guardarMantenimiento()">
+    <div>
+      <label>Fecha</label>
+      <input type="date" class="p-2 w-full rounded border" [(ngModel)]="nuevoMantenimiento.fecha" name="fecha" required />
+    </div>
+    <div>
+      <label>Tipo de Mantenimiento</label>
+      <select class="p-2 w-full rounded border" [(ngModel)]="nuevoMantenimiento.tipo" name="tipo" required>
+        <option value="">Seleccionar...</option>
+        <option value="Cambio de Aceite">Cambio de Aceite</option>
+        <option value="Neumáticos">Neumáticos</option>
+        <option value="Frenos">Frenos</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div>
+      <label>Observaciones</label>
+      <textarea class="p-2 w-full rounded border min-h-20" [(ngModel)]="nuevoMantenimiento.observaciones" name="observaciones"></textarea>
+    </div>
+    <button type="submit" class="p-2.5 bg-emerald-500 text-white rounded hover:bg-emerald-600">Guardar Registro</button>
+  </form>
+</section>
+
+<!-- HISTORIAL -->
+<section class="p-5 mt-8 rounded-xl bg-white shadow">
+  <h2 class="mb-5 text-xl text-slate-700">📋 Historial de Mantenimientos</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="border-b-2">
+          <th class="px-2 py-3">Fecha</th>
+          <th class="px-2 py-3">Tipo</th>
+          <th class="px-2 py-3">Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of maintenanceRecords" class="border-b">
+          <td class="px-2 py-3">{{ record.date }}</td>
+          <td class="px-2 py-3">{{ record.type }}</td>
+          <td class="px-2 py-3">{{ record.notes }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

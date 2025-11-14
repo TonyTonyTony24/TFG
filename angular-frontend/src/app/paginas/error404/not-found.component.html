@@ -1,0 +1,17 @@
+<div class="flex flex-col justify-center items-center p-5 min-h-screen text-center bg-gray-50 max-sm:p-4">
+  <img alt="Lost car illustration" src="https://images.pexels.com/photos/14617499/pexels-photo-14617499.jpeg"
+    class="object-cover overflow-hidden mb-8 w-full aspect-square max-w-[400px] max-sm:mb-6 max-sm:max-w-[280px]" />
+  <h1 class="mb-4 text-5xl font-bold text-cyan-700 max-sm:text-3xl">
+    Página no encontrada
+  </h1>
+  <p class="mb-8 text-lg leading-relaxed max-w-[500px] text-slate-500 max-sm:mb-6 max-sm:text-base">
+    Lo sentimos, la página que buscas no existe o ha sido movida.
+  </p>
+  <a href="/"
+    class="px-8 py-4 text-lg font-semibold no-underline bg-cyan-700 rounded-lg transition-all cursor-pointer duration-[0.2s] ease-[ease] text-[white] max-sm:px-7 max-sm:py-3.5 max-sm:text-base hover:bg-[#1e5690] hover:transform hover:translate-y-[-2px]"
+    (mouseenter)="setHover(true)" (mouseleave)="setHover(false)" [ngStyle]="{
+      'box-shadow': hover ? '0 4px 12px rgba(44, 116, 179, 0.2)' : 'none'
+    }">
+    Volver al inicio
+  </a>
+</div>

@@ -1,0 +1,14 @@
+<h2 class="text-xl font-semibold text-slate-700 mb-4">Detalles del vehículo</h2>
+
+<!-- Navegación entre secciones del vehículo -->
+<nav class="flex gap-4 mb-6">
+  <a [routerLink]="['itv']" routerLinkActive="text-blue-600 font-semibold"
+     class="text-slate-600 hover:text-blue-500 transition">ITV</a>
+  <a [routerLink]="['seguros']" routerLinkActive="text-blue-600 font-semibold"
+     class="text-slate-600 hover:text-blue-500 transition">Seguros</a>
+  <a [routerLink]="['mantenimientos']" routerLinkActive="text-blue-600 font-semibold"
+     class="text-slate-600 hover:text-blue-500 transition">Mantenimientos</a>
+</nav>
+
+<!-- Aquí se cargan dinámicamente los componentes hijos -->
+<router-outlet></router-outlet>

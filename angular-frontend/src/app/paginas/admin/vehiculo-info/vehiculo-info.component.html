@@ -1,0 +1,23 @@
+<section class="p-5 rounded-xl bg-white shadow">
+  <h2 class="mb-5 text-xl text-slate-700">⚠️ Recordatorios y Vencimientos</h2>
+  <div class="grid gap-4">
+    <div
+      *ngFor="let alert of alerts"
+      class="flex justify-between items-center p-4 rounded-lg"
+      [ngStyle]="{
+        backgroundColor: alert.status === 'danger' ? '#fee2e2' : '#fef3c7'
+      }"
+    >
+      <div>
+        <strong>{{ alert.type }}</strong>
+        <div class="text-sm" [ngStyle]="{
+            color: alert.status === 'danger' ? '#dc2626' : '#92400e'
+          }">
+          <span>Vence: </span>
+          <span>{{ alert.dueDate | date }}</span>
+        </div>
+      </div>
+      <span>{{ alert.status === 'danger' ? '🚨' : '⚠️' }}</span>
+    </div>
+  </div>
+</section>
